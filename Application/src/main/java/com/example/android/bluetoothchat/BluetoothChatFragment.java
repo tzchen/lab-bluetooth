@@ -98,6 +98,12 @@ public class BluetoothChatFragment extends Fragment {
          *  TODO: Let us know via Toast Bluetooth is not available.
          *  TODO: Then finish() the fragment's attached Activity.
          */
+
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
+            Toast.makeText(getContext(), "Bluetooth is not available", Toast.LENGTH_SHORT).show();
+            getActivity().finish();
+        }
     }
 
 
@@ -114,6 +120,10 @@ public class BluetoothChatFragment extends Fragment {
                  * TODO: If adapter is NOT enabled, send an Implicit Intent with the action ACTION_REQUEST_ENABLE (send for a result)
                  * TODO: Otherwise, check if the BluetoothChatService is null, and if so call setupChat() to set it up.
                  */
+
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+
 
             }
             else if(mChatService == null){
@@ -203,6 +213,11 @@ public class BluetoothChatFragment extends Fragment {
          * TODO: Check if the adapter is in SCAN_MODE_CONNECTABLE_DISCOVERBLE mode
          * TODO: If not, send an Implicit Intent for the ACTION_REQUEST_DISCOVERABLE action (with an extra for the EXTRA_DISCOVERABLE_DURATION)
          */
+
+        if (!(mBluetoothAdapter.getScanMode() == BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE)) {
+            Intent enableDiscovIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+            enableDiscovIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
+        }
 
     }
 
